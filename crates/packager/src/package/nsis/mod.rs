@@ -547,10 +547,15 @@ fn build_nsis_app_installer(ctx: &Context, nsis_path: &Path) -> crate::Result<Ve
 
     nsis_cmd
         .arg(installer_nsi_path)
-        .current_dir(intermediates_path)
+        .current_dir(&intermediates_path)
         .output_ok()
         .map_err(crate::Error::NsisFailed)?;
 
+    std::fs::write(intermediates_path.join("test"), "test").unwrap();
+    println!(
+        "{:?}",
+        std::fs::read_to_string(intermediates_path.join("test"))
+    );
     println!("done compiling NSIS");
     println!(
         "nsis_output_path {:?} {}",
