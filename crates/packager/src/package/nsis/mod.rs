@@ -455,7 +455,9 @@ fn build_nsis_app_installer(ctx: &Context, nsis_path: &Path) -> crate::Result<Ve
     }
 
     let out_file = "nsis-output.exe";
-    data.insert("out_file", to_json(out_file));
+    let nsis_output_path = intermediates_path.join(out_file);
+
+    data.insert("out_file", to_json(&nsis_output_path));
 
     let (resources_dirs, resources) = generate_resource_data(config)?;
     data.insert("resources_dirs", to_json(resources_dirs));
@@ -515,8 +517,6 @@ fn build_nsis_app_installer(ctx: &Context, nsis_path: &Path) -> crate::Result<Ve
         }
     }
 
-    let nsis_output_path = intermediates_path.join(out_file);
-
     let installer_path = config.out_dir().join(format!(
         "{}_{}_{}-setup.exe",
         main_binary_name, config.version, arch
@@ -552,7 +552,11 @@ fn build_nsis_app_installer(ctx: &Context, nsis_path: &Path) -> crate::Result<Ve
         .map_err(crate::Error::NsisFailed)?;
 
     println!("done compiling NSIS");
-    println!("nsis_output_path {}", nsis_output_path.exists());
+    println!(
+        "nsis_output_path {:?} {}",
+        nsis_output_path,
+        nsis_output_path.exists()
+    );
     println!(
         "installer_path parent {}",
         installer_path.parent().unwrap().exists()
