@@ -551,6 +551,8 @@ fn build_nsis_app_installer(ctx: &Context, nsis_path: &Path) -> crate::Result<Ve
         .output_ok()
         .map_err(crate::Error::NsisFailed)?;
 
+    println!("{:?} {}", intermediates_path, intermediates_path.exists());
+    std::fs::create_dir_all(&intermediates_path).unwrap();
     std::fs::write(intermediates_path.join("test"), "test").unwrap();
     println!(
         "{:?}",
