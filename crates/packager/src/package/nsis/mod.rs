@@ -551,6 +551,12 @@ fn build_nsis_app_installer(ctx: &Context, nsis_path: &Path) -> crate::Result<Ve
         .output_ok()
         .map_err(crate::Error::NsisFailed)?;
 
+    println!("done compiling NSIS");
+    println!("nsis_output_path {}", nsis_output_path.exists());
+    println!(
+        "installer_path parent {}",
+        installer_path.parent().unwrap().exists()
+    );
     std::fs::rename(nsis_output_path, &installer_path)?;
 
     if config.can_sign() {
